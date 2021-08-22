@@ -1,12 +1,16 @@
 import React from 'react';
-import { ListHeaderStyle, ListStyle, ListTableStyle } from './styled';
+import { Link } from 'react-router-dom';
+
+import { ListHeaderStyle, ListStyle, ListTableStyle, TrStyle } from './styled';
 
 const List: React.FC = () => {
   return(
     <ListStyle>
       <div>
         <ListHeaderStyle>
-          <i className="fas fa-chevron-left"></i>
+          <Link to='/'>
+            <i className="fas fa-chevron-left"/>
+          </Link>
           <h1>Empresas</h1>
         </ListHeaderStyle>
         <ListTableStyle>
@@ -19,13 +23,27 @@ const List: React.FC = () => {
               </tr>
             </thead>
             <tbody>
-              <tr>
+              <TrStyle i={2}>
                 <td>Facebook Inc.</td>
                 <td>Curitiba/PR</td>
                 <td>80.300-320</td>
                 <td>08/2020</td>
-                <i className="fas fa-chevron-circle-down"></i>
-              </tr>
+                <td><i className="fas fa-chevron-circle-down"></i></td>
+              </TrStyle>
+              <TrStyle i={3}>
+                <td>Facebook Inc.</td>
+                <td>Curitiba/PR</td>
+                <td>80.300-320</td>
+                <td>08/2020</td>
+                <td><i className="fas fa-chevron-circle-down"></i></td>
+              </TrStyle>
+              <TrStyle i={2}>
+                <td>Facebook Inc.</td>
+                <td>Curitiba/PR</td>
+                <td>80.300-320</td>
+                <td>08/2020</td>
+                <td><i className="fas fa-chevron-circle-down"></i></td>
+              </TrStyle>
             </tbody>
           </ListTableStyle>
       </div>

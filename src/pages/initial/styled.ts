@@ -17,7 +17,7 @@ export const ContentStyle = styled.div`
       width: 71px;
     }
 
-    div{
+    a{
       width: 22%;
       min-width: 130px;
       height: 160px;
