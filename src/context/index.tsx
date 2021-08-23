@@ -1,18 +1,21 @@
 import { createContext, ReactNode, useState } from "react";
 
 type Companys = {
-  CPF: number;
+  cpf: string;
   nome: string;
   email: string;
-  date: Date;
+  date: string;
 }
 
 interface Company {
-  companys: Companys[]
+  companys: Companys[] 
   setCompanys: (value: Companys[]) => void
 }
 
-const AppContext = createContext<Company | undefined>(void 0)
+const AppContext = createContext<Company>({
+  companys: [],
+  setCompanys: () => {}
+})
 
 interface ProviderProps {
   children: ReactNode

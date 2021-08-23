@@ -3,7 +3,7 @@ import styled from "styled-components";
 
 export const AddCompanyStyle1 = styled.div`
   width: 80%;
-  height: 300px;
+  height: 400px;
 
   margin: 0 auto;
 
@@ -25,6 +25,12 @@ export const AddCompanyStyle1 = styled.div`
       font-size: 16px;
 
       width: 220px;
+    }
+
+    div{
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
     }
 
     div:nth-child(3){
