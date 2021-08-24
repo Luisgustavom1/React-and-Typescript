@@ -1,8 +1,10 @@
-import AppContext from 'context'
 import { MouseEvent, useContext } from 'react'
+
+import AppContext from 'context'
 import { Companys } from '../core/companys'
 
-export function UseDelete(companys: Companys[], e: MouseEvent<HTMLParagraphElement>){
+export default function deleteCompany(companys: Companys[], e: MouseEvent<HTMLParagraphElement>){
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   const { setCompanys } = useContext(AppContext)
 
   const allTheCompanys = [...companys]

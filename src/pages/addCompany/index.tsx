@@ -5,9 +5,32 @@ import { Link } from "react-router-dom"
 import { AddCompanyStyle1, NewHeader, SelectStyle } from "./style"
 
 export default function AddCompany(): JSX.Element{
-  const [errors, setErrors] = useState<string[]>(['', '', '', ''])
+  const [errors, setErrors] = useState<string[]>([])
 
   const { companys, setCompanys, companyEdit, setCompanyEdit } = useContext(AppContext)
+
+  function verification(nome: HTMLInputElement, cpf: HTMLInputElement, date: HTMLInputElement, cidade: HTMLInputElement): void{
+    if(!nome.value) {
+      const erro = [...errors]
+      erro.push('Nome é obrigatório') 
+      setErrors(erro)
+    } 
+    if(!cpf.value) {
+      const erro = [...errors]
+      erro.push('cpf é obrigatório') 
+      setErrors(erro)
+    }
+    if(!date.value) {
+      const erro = [...errors]
+      erro.push('date é obrigatório') 
+      setErrors(erro)
+    }
+    if(!cidade.value) {
+      const erro = [...errors]
+      erro.push('cidade é obrigatório') 
+      setErrors(erro)
+    }
+  }
 
   function handleClick(e: FormEvent<HTMLFormElement>): void{
     e.preventDefault();
@@ -17,7 +40,9 @@ export default function AddCompany(): JSX.Element{
     const date = document.querySelector('#date') as HTMLInputElement;
     const cidade = document.querySelector('#cidade') as HTMLInputElement;  
     
-    if(errors.map(err => err.length > 0)) {
+    verification(nome, cpf, date, cidade) 
+
+    if(errors.length === 0) {
       const newCompany = {
         nome: nome.value,
         cpf: cpf.value,
@@ -30,10 +55,9 @@ export default function AddCompany(): JSX.Element{
       
       localStorage.setItem('AllTheCompanys', JSON.stringify(companyUpdate))
       setCompanys(companyUpdate)
+      
+      alert('Sucesso')
   
-      
-      alert('Empresa adicionada com sucesso')
-      
       setCompanyEdit({
         nome: '',
         cpf: '',
@@ -44,8 +68,9 @@ export default function AddCompany(): JSX.Element{
       nome.value = '';
       cpf.value = '';
       date.value = '';
-      cidade.value = '';
-    };    
+      cidade.value = '';  
+
+    } 
   };
 
   return(
@@ -77,7 +102,6 @@ export default function AddCompany(): JSX.Element{
                 placeHolder='Insira seu documento'
                 value={companyEdit.cpf}
               />
-              <p>{errors[0]}</p>
             </div>
             <div>
               <Input
@@ -85,7 +109,6 @@ export default function AddCompany(): JSX.Element{
                 placeHolder='Nome completo/Razão social'
                 value={companyEdit.nome}
               />
-              <p>{errors[1]}</p>
             </div>
           </span>
           <span>
@@ -95,7 +118,6 @@ export default function AddCompany(): JSX.Element{
                 placeHolder='Sua Cidade'
                 value={companyEdit.cidade}
               />
-              <p>{errors[2]}</p>
             </div>
             <div>
               <Input
@@ -104,7 +126,6 @@ export default function AddCompany(): JSX.Element{
                 type='Date'
                 value={companyEdit.date}
               />
-              <p>{errors[3]}</p>
             </div>
           </span>
           <button type='submit'>Salvar</button>

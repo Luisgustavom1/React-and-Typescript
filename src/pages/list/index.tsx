@@ -1,29 +1,39 @@
 import { MouseEvent, useContext } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 
-import AppContext from 'context';
-import { UseDelete } from 'hooks/useCompany';
 import { Companys } from 'core/companys';
-
+import AppContext from 'context';
 import { ListHeaderStyle, ListStyle, ListTableStyle, TrStyle } from './styled';
 
 export default function List(): JSX.Element{
   const history = useHistory()
+  const { companys, setCompanys, setCompanyEdit } = useContext(AppContext)
 
-  const { companys, setCompanyEdit } = useContext(AppContext)
+  function deleteCompany(e: MouseEvent<HTMLParagraphElement>){
+    const allTheCompanys = [...companys]
 
-  function deleteCompany(event: MouseEvent<HTMLParagraphElement>){
-    const { allTheCompanys } = UseDelete(companys, event)
+    const index = allTheCompanys.indexOf(companys.filter((company: Companys) => 
+    company.cpf === e.currentTarget.id
+    )[0])
+    
+    allTheCompanys.splice(index, 1)
     
     localStorage.setItem('AllTheCompanys', JSON.stringify(allTheCompanys))   
+    setCompanys(allTheCompanys)    
   };
 
-  function editCompany(event: MouseEvent<HTMLParagraphElement>){
-    const { allTheCompanys } = UseDelete(companys, event)
+  function editCompany(e: MouseEvent<HTMLParagraphElement>){
+    const allTheCompanys = [...companys]
 
-    const companyWillEdit = allTheCompanys.filter((company: Companys) => company.cpf === event.currentTarget.id)
-    
+    const companyWillEdit = allTheCompanys.filter((company: Companys) => company.cpf === e.currentTarget.id)
+
     setCompanyEdit(companyWillEdit[0])
+    
+    const index = allTheCompanys.indexOf(companys.filter((company: Companys) => 
+    company.cpf === e.currentTarget.id
+    )[0])
+    
+    allTheCompanys.splice(index, 1)
 
     history.push('/add')
   }
