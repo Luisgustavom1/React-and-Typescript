@@ -1,9 +1,33 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import { MouseEvent, useContext } from 'react';
+import { Link, useHistory } from 'react-router-dom';
+
+import AppContext from 'context';
+import { UseDelete } from 'hooks/useCompany';
+import { Companys } from 'core/companys';
 
 import { ListHeaderStyle, ListStyle, ListTableStyle, TrStyle } from './styled';
 
-const List: React.FC = () => {
+export default function List(): JSX.Element{
+  const history = useHistory()
+
+  const { companys, setCompanyEdit } = useContext(AppContext)
+
+  function deleteCompany(event: MouseEvent<HTMLParagraphElement>){
+    const { allTheCompanys } = UseDelete(companys, event)
+    
+    localStorage.setItem('AllTheCompanys', JSON.stringify(allTheCompanys))   
+  };
+
+  function editCompany(event: MouseEvent<HTMLParagraphElement>){
+    const { allTheCompanys } = UseDelete(companys, event)
+
+    const companyWillEdit = allTheCompanys.filter((company: Companys) => company.cpf === event.currentTarget.id)
+    
+    setCompanyEdit(companyWillEdit[0])
+
+    history.push('/add')
+  }
+
   return(
     <ListStyle>
       <div>
@@ -18,37 +42,28 @@ const List: React.FC = () => {
               <tr>
                 <th>Identificação</th>
                 <th>Cidade/UF</th>
-                <th>CEP</th>
+                <th>CPF</th>
                 <th>Data de Abertura</th>
               </tr>
             </thead>
             <tbody>
-              <TrStyle i={2}>
-                <td>Facebook Inc.</td>
-                <td>Curitiba/PR</td>
-                <td>80.300-320</td>
-                <td>08/2020</td>
-                <td><i className="fas fa-chevron-circle-down"></i></td>
-              </TrStyle>
-              <TrStyle i={3}>
-                <td>Facebook Inc.</td>
-                <td>Curitiba/PR</td>
-                <td>80.300-320</td>
-                <td>08/2020</td>
-                <td><i className="fas fa-chevron-circle-down"></i></td>
-              </TrStyle>
-              <TrStyle i={2}>
-                <td>Facebook Inc.</td>
-                <td>Curitiba/PR</td>
-                <td>80.300-320</td>
-                <td>08/2020</td>
-                <td><i className="fas fa-chevron-circle-down"></i></td>
-              </TrStyle>
+              {
+                companys.map((company: Companys, i: number) => {
+                  return <TrStyle i={i} key={company.cpf}>
+                          <td>{company.nome}</td>
+                          <td>{company.cidade}</td>
+                          <td>{company.cpf}</td>
+                          <td>{company.date}</td>
+                          <td>
+                            <p id={company.cpf} onClick={(e) => editCompany(e)}>Editar</p>
+                            <p id={company.cpf} onClick={(e) => deleteCompany(e)}>Excluir</p>
+                          </td>
+                        </TrStyle>
+                })
+              }
             </tbody>
           </ListTableStyle>
       </div>
     </ListStyle>
   )
 }
-
-export default List;

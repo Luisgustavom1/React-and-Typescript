@@ -1,20 +1,24 @@
 import { createContext, ReactNode, useState } from "react";
 
-type Companys = {
-  cpf: string;
-  nome: string;
-  email: string;
-  date: string;
-}
+import { Companys } from '../core/companys'
 
 interface Company {
   companys: Companys[] 
   setCompanys: (value: Companys[]) => void
+  companyEdit: Companys
+  setCompanyEdit: (value: Companys) => void
 }
 
 const AppContext = createContext<Company>({
   companys: [],
-  setCompanys: () => {}
+  setCompanys: () => {},
+  companyEdit: {
+    cpf: '',
+    nome: '',
+    cidade: '',
+    date: ''
+  },
+  setCompanyEdit: () => {}
 })
 
 interface ProviderProps {
@@ -24,10 +28,17 @@ interface ProviderProps {
 export function AppProvider(props: ProviderProps){
   const { children } = props;
   
-  const [companys, setCompanys] = useState<Companys[]>([])
+  const [companys, setCompanys] = useState<Companys[]>(JSON.parse(localStorage.getItem('AllTheCompanys') || '[]'));
+
+  const [companyEdit, setCompanyEdit] = useState<Companys>({
+    cpf: '',
+    nome: '',
+    cidade: '',
+    date: ''
+  })
 
   return(
-    <AppContext.Provider value={{companys, setCompanys}}>
+    <AppContext.Provider value={{companys, setCompanys, companyEdit, setCompanyEdit}}>
       {children}
     </AppContext.Provider>
   )

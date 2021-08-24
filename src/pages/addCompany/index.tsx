@@ -1,25 +1,13 @@
+import Input from "components/input"
 import AppContext from "context"
 import { FormEvent, useContext, useState } from "react"
-import { Link, useHistory } from "react-router-dom"
+import { Link } from "react-router-dom"
 import { AddCompanyStyle1, NewHeader, SelectStyle } from "./style"
 
-interface Errors {
-  cpf: string,
-  nome: string,
-  email: string,
-  date: string
-}
+export default function AddCompany(): JSX.Element{
+  const [errors, setErrors] = useState<string[]>(['', '', '', ''])
 
-export default function AddCompany(){
-  const [errors, setErrors] = useState<Errors>({
-    cpf: '',
-    nome: '',
-    email: '',
-    date: ''
-  })
-  const { companys, setCompanys } = useContext(AppContext)
-
-  const history = useHistory()
+  const { companys, setCompanys, companyEdit, setCompanyEdit } = useContext(AppContext)
 
   function handleClick(e: FormEvent<HTMLFormElement>): void{
     e.preventDefault();
@@ -27,60 +15,37 @@ export default function AddCompany(){
     const nome = document.querySelector('#nome') as HTMLInputElement;
     const cpf = document.querySelector('#document') as HTMLInputElement;
     const date = document.querySelector('#date') as HTMLInputElement;
-    const email = document.querySelector('#email') as HTMLInputElement;
-
-    if(!cpf.value) {
-      const erro = {
-        nome: errors.nome,
-        date: errors.date,
-        email: errors.email,
-        cpf: 'O documento é obrigatório',
-      }      
-      setErrors(erro);
-      console.log('document');
-    };
-
-    if(!nome.value) {
-      setErrors({
-        cpf: errors.cpf,
-        date: errors.date,
-        email: errors.email,
-        nome: 'O nome é obrigatório',
-      });
-    };
-
-    if(!email.value) {
-      setErrors({
-        nome: errors.nome,
-        cpf: errors.cpf,
-        date: errors.date,
-        email: 'O email é obrigatório',
-      });
-    };
-
-    if(!date.value) {
-      setErrors({
-        nome: errors.nome,
-        cpf: errors.cpf,
-        email: errors.email,
-        date: 'A data é obrigatório',
-      })
-      return
-    };
-
-    const newCompany = {
-      nome: nome.value,
-      cpf: cpf.value,
-      date: date.value,
-      email: email.value
-    };
-
-    const companyUpdate = [...companys]
-    companyUpdate.push(newCompany)
+    const cidade = document.querySelector('#cidade') as HTMLInputElement;  
     
-    setCompanys(companyUpdate)
-
-    history.push('/')
+    if(errors.map(err => err.length > 0)) {
+      const newCompany = {
+        nome: nome.value,
+        cpf: cpf.value,
+        date: date.value,
+        cidade: cidade.value
+      };
+  
+      const companyUpdate = [...companys]
+      companyUpdate.push(newCompany)
+      
+      localStorage.setItem('AllTheCompanys', JSON.stringify(companyUpdate))
+      setCompanys(companyUpdate)
+  
+      
+      alert('Empresa adicionada com sucesso')
+      
+      setCompanyEdit({
+        nome: '',
+        cpf: '',
+        date: '',
+        cidade: ''
+      })
+      
+      nome.value = '';
+      cpf.value = '';
+      date.value = '';
+      cidade.value = '';
+    };    
   };
 
   return(
@@ -107,22 +72,39 @@ export default function AddCompany(){
               </select>
             </SelectStyle>
             <div>
-              <input type='number' placeholder='Document' id='document' name='document'/>
-              {errors.cpf}
+              <Input
+                identify='document'
+                placeHolder='Insira seu documento'
+                value={companyEdit.cpf}
+              />
+              <p>{errors[0]}</p>
             </div>
             <div>
-              <input type='text' placeholder='Nome completo/Razão social' id='nome' name='nome'/>
-              {errors.nome}
+              <Input
+                identify='nome'
+                placeHolder='Nome completo/Razão social'
+                value={companyEdit.nome}
+              />
+              <p>{errors[1]}</p>
             </div>
           </span>
           <span>
             <div>
-              <input type='text' placeholder='E-mail' id='email' name='email'/>
-              {errors.email}
+              <Input
+                identify='cidade'
+                placeHolder='Sua Cidade'
+                value={companyEdit.cidade}
+              />
+              <p>{errors[2]}</p>
             </div>
             <div>
-              <input type='date' id='date' name='date'/>
-              {errors.date}
+              <Input
+                identify='date'
+                placeHolder='date'
+                type='Date'
+                value={companyEdit.date}
+              />
+              <p>{errors[3]}</p>
             </div>
           </span>
           <button type='submit'>Salvar</button>

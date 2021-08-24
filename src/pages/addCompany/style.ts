@@ -31,6 +31,11 @@ export const AddCompanyStyle1 = styled.div`
       display: flex;
       flex-direction: column;
       gap: 5px;
+
+      p{
+        font-size: 14px;
+        color: red;
+      }
     }
 
     div:nth-child(3){
